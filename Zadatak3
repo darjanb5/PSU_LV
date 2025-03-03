@@ -4,3 +4,23 @@ srednju, minimalnu i maksimalnu vrijednost. Sortirajte listu i ispišite je na e
 Dodatno: osigurajte program od pogrešnog unosa (npr. slovo umjesto brojke) na način da program zanemari taj unos i
 ispiše odgovarajuću poruku.
 
+lista = []
+while True:
+    try:
+        unos = str(input("Unesite brojeve, kada zavrsite upisite Done: "))
+        if unos.lower() == 'done':
+            break
+        broj = int(unos)
+        lista.append(broj)
+    except ValueError:
+        print("Molim unesite broj")
+if len(lista) == 0:
+    print("Lista je prazna")
+else:
+    print("Brojeva uneseno:", len(lista))
+    print("Srednja vrijednost je:", sum(lista) / len(lista))
+    print("Minimalna vrijednost je:", min(lista))
+    print("Maksimalna vrijednost je:", max(lista))
+
+lista.sort()
+print("Sortirana lista: ", lista)
