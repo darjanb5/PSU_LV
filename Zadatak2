@@ -10,8 +10,10 @@ broj izvan intervala [0.0 i 1.0] potrebno je ispisati odgovarajuću poruku.
 
 try:
     ocjena = float(input("Unesite ocjenu izmedu 0.0 i 1.0: "))
-    if ocjena < 0.0 and ocjena > 1.0:
-        print("Unesite ocjenu izmedu 0.0 i 1.0")
+    if ocjena < 0.0:
+         print("Unesite ocjenu izmedju 0 i 1")
+    elif ocjena > 1.0:
+         print("Unesite ocjenu izmedju 0 i 1")
     elif ocjena >= 0.9:
         print('A')
     elif ocjena >= 0.8:
