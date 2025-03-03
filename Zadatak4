@@ -1,0 +1,7 @@
+Napišite program koji od korisnika zahtijeva unos imena tekstualne datoteke. Program nakon toga treba tražiti linije oblika: X-DSPAM-Confidence: <neki_broj> koje predstavljaju pouzdanost korištenog spam filtra. 
+Potrebno je izračunati srednju vrijednost pouzdanosti. Koristite datoteke mbox.txt i mbox-short.txt
+Primjer
+Ime datoteke: mbox.txt
+Average X-DSPAM-Confidence: 0.894128046745
+Ime datoteke: mbox-short.txt
+Average X-DSPAM-Confidence: 0.750718518519
