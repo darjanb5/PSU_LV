@@ -1,0 +1,83 @@
+1.ZADATAK
+import pandas as pd
+import numpy as np
+mtcars = pd.read_csv('mtcars.csv')
+print("1. ZADATAK")
+top5_potrosnja = mtcars.sort_values(by="mpg").head(5)
+print("5 automobila s najvećom potrošnjom:\n", top5_potrosnja[["car", "mpg"]])
+top3_8cyl = mtcars[mtcars["cyl"] == 8].sort_values(by="mpg", ascending=False).head(3)
+print("3 automobila s 8 cilindara i najmanjom potrošnjom:\n", top3_8cyl[["car", "mpg"]])
+avg_mpg_6cyl = mtcars[mtcars["cyl"] == 6]["mpg"].mean()
+print("Srednja potrošnja automobila sa 6 cilindara:", avg_mpg_6cyl)
+avg_mpg_4cyl_weight = mtcars[(mtcars["cyl"] == 4) & (mtcars["wt"] * 1000 >= 2000) & (mtcars["wt"] * 1000 <= 2200)]["mpg"].mean()
+print("Srednja potrošnja automobila s 4 cilindra i masom između 2000 i 2200 lbs:", avg_mpg_4cyl_weight)
+manual_count = mtcars[mtcars["am"] == 1].shape[0]
+auto_count = mtcars[mtcars["am"] == 0].shape[0]
+print(f"Broj automobila s ručnim mjenjačem: {manual_count}, s automatskim: {auto_count}")
+auto_hp100_count = mtcars[(mtcars["am"] == 0) & (mtcars["hp"] > 100)].shape[0]
+print("Broj automobila s automatskim mjenjačem i snagom preko 100 KS:", auto_hp100_count)
+mtcars["weight_kg"] = mtcars["wt"] * 1000 * 0.453592
+print("Masa automobila u kg:\n", mtcars[["car", "weight_kg"]])
+print("2. ZADATAK")
+
+
+2.ZADATAK
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+mtcars = pd.read_csv("mtcars.csv")
+
+plt.figure(figsize=(8, 5))
+sns.barplot(data=mtcars, x="cyl", y="mpg", estimator="mean", errorbar=None, palette="viridis")
+plt.xlabel("Broj cilindara")
+plt.ylabel("Prosječna potrošnja (mpg)")
+plt.title("Prosječna potrošnja automobila po broju cilindara")
+plt.show()
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=mtcars, x="cyl", y=mtcars["wt"] * 1000, palette="Set2")
+plt.xlabel("Broj cilindara")
+plt.ylabel("Težina (lbs)")
+plt.title("Distribucija težine automobila prema broju cilindara")
+plt.show()
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(data=mtcars, x="am", y="mpg", palette="coolwarm")
+plt.xticks([0, 1], ["Automatski", "Ručni"])
+plt.xlabel("Tip mjenjača")
+plt.ylabel("Potrošnja (mpg)")
+plt.title("Poređenje potrošnje između ručnog i automatskog mjenjača")
+plt.show()
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=mtcars, x="hp", y="qsec", hue="am", palette={0: "red", 1: "blue"}, style="am")
+plt.xlabel("Snaga (hp)")
+plt.ylabel("Ubrzanje (qsec)")
+plt.title("Odnos ubrzanja i snage automobila po tipu mjenjača")
+plt.legend(title="Mjenjač", labels=["Automatski", "Ručni"])
+plt.show()
+
+3.ZADATAK
+import requests
+import pandas as pd
+
+API_URL = "http://iszz.azo.hr/iskzl/rest/"
+
+response = requests.get(f"{API_URL}measuring-site/station/OS/daily/PM10")
+if response.status_code != 200:
+    print("Greška pri dohvaćanju podataka!")
+    exit()
+
+data = response.json()
+
+df = pd.DataFrame(data)
+
+df["datum"] = pd.to_datetime(df["datum"])
+
+df_2017 = df[df["datum"].dt.year == 2017]
+
+df_sorted = df_2017.sort_values(by="vrijednost", ascending=False)
+
+top3 = df_sorted.head(3)
+print("Tri datuma s najvećom koncentracijom PM10 u 2017. godini za Osijek:")
+print(top3[["datum", "vrijednost"]])
