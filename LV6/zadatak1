@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+def generate_data(num_samples, data_type):
+    if data_type == 1:
+        return np.concatenate([np.random.normal(loc=[3, 3], scale=1, size=(num_samples // 2, 2)),
+                               np.random.normal(loc=[7, 7], scale=1, size=(num_samples // 2, 2))], axis=0)
+    elif data_type == 2:
+        theta = np.linspace(0, 2 * np.pi, num_samples)
+        r = np.sin(2 * theta) + np.cos(3 * theta)
+        return np.column_stack([r * np.cos(theta), r * np.sin(theta)])
+    elif data_type == 3:
+        t = np.linspace(0, 4 * np.pi, num_samples)
+        return np.column_stack([t * np.cos(t), t * np.sin(t)])
+    elif data_type == 4:
+        return np.concatenate([np.random.normal(loc=[1, 1], scale=1, size=(num_samples // 2, 2)),
+                               np.random.normal(loc=[10, 10], scale=1, size=(num_samples // 2, 2))], axis=0)
+    elif data_type == 5:
+        return np.random.rand(num_samples, 2)
+
+num_samples = 500
+data_type = 1
+
+data = generate_data(num_samples, data_type)
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(data)
+
+labels = kmeans.labels_
+centroids = kmeans.cluster_centers_
+
+plt.figure(figsize=(8, 6))
+plt.scatter(data[:, 0], data[:, 1], c=labels, cmap='viridis', marker='o', s=50)
+plt.scatter(centroids[:, 0], centroids[:, 1], c='red', marker='X', s=200, label='Centroids')
+plt.title(f"Grupiranje podataka (metoda {data_type})")
+plt.xlabel('Prva ulazna veličina')
+plt.ylabel('Druga ulazna veličina')
+plt.legend()
+plt.show()
+
