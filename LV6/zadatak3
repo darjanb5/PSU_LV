@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+def generate_data(num_samples, data_type):
+    if data_type == 1:
+        return np.concatenate([np.random.normal(loc=[3, 3], scale=1, size=(num_samples // 2, 2)),
+                               np.random.normal(loc=[7, 7], scale=1, size=(num_samples // 2, 2))], axis=0)
+    elif data_type == 2:
+        theta = np.linspace(0, 2 * np.pi, num_samples)
+        r = np.sin(2 * theta) + np.cos(3 * theta)
+        return np.column_stack([r * np.cos(theta), r * np.sin(theta)])
+    elif data_type == 3:
+        t = np.linspace(0, 4 * np.pi, num_samples)
+        return np.column_stack([t * np.cos(t), t * np.sin(t)])
+    elif data_type == 4:
+        return np.concatenate([np.random.normal(loc=[1, 1], scale=1, size=(num_samples // 2, 2)),
+                               np.random.normal(loc=[10, 10], scale=1, size=(num_samples // 2, 2))], axis=0)
+    elif data_type == 5:
+        return np.random.rand(num_samples, 2)
+
+num_samples = 500
+data_type = 1
+
+data = generate_data(num_samples, data_type)
+
+methods = ['single', 'complete', 'average', 'ward']
+
+plt.figure(figsize=(10, 8))
+
+for i, method in enumerate(methods, 1):
+    plt.subplot(2, 2, i)
+    Z = linkage(data, method=method)
+    dendrogram(Z)
+    plt.title(f"Dendrogram ({method})")
+
+plt.tight_layout()
+plt.show()
