@@ -1,0 +1,79 @@
+1)
+a)
+import matplotlib.pyplot as plt
+import numpy as np
+
+def prikazi_primjere(x_train, y_train):
+    plt.figure(figsize=(6, 6))
+    for i in range(9):
+        plt.subplot(3, 3, i + 1)
+        plt.imshow(x_train[i], cmap='gray')
+        plt.title(f"Labela: {y_train[i]}")
+        plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+b)
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+from tensorflow.keras.utils import to_categorical
+
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+model = Sequential([
+    Flatten(input_shape=(28, 28)),
+    Dense(128, activation='relu'),
+    Dense(10, activation='softmax')
+])
+
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+y_train_cat = to_categorical(y_train, 10)
+y_test_cat = to_categorical(y_test, 10)
+
+model.fit(x_train, y_train_cat, epochs=5, batch_size=32, validation_split=0.1)
+
+c)
+train_loss, train_accuracy = model.evaluate(x_train, y_train_cat, verbose=0)
+print(f"Točnost na skupu za učenje: {train_accuracy:.4f}")
+
+test_loss, test_accuracy = model.evaluate(x_test, y_test_cat, verbose=0)
+print(f"Točnost na testnom skupu: {test_accuracy:.4f}")
+
+d)
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+y_train_pred = np.argmax(model.predict(x_train), axis=1)
+y_test_pred = np.argmax(model.predict(x_test), axis=1)
+
+conf_mat_train = confusion_matrix(y_train, y_train_pred)
+conf_mat_test = confusion_matrix(y_test, y_test_pred)
+
+ConfusionMatrixDisplay(conf_mat_train, display_labels=np.arange(10)).plot(cmap='Blues')
+plt.title("Matrica zabune - Trening")
+plt.show()
+
+ConfusionMatrixDisplay(conf_mat_test, display_labels=np.arange(10)).plot(cmap='Blues')
+plt.title("Matrica zabune - Test")
+plt.show()
+
+
+
+2)
+import random
+
+greske_idx = np.where(y_test != y_test_pred)[0]
+
+random_greske = np.random.choice(greske_idx, size=9, replace=False)
+
+plt.figure(figsize=(10, 10))
+for i, idx in enumerate(random_greske):
+    plt.subplot(3, 3, i + 1)
+    plt.imshow(x_test[idx], cmap='gray')
+    plt.title(f"Stvarno: {y_test[idx]}, Predikcija: {y_test_pred[idx]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
